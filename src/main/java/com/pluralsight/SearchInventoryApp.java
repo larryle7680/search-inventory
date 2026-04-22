@@ -26,37 +26,42 @@ static Scanner theScanner = new Scanner (System.in);
 
 
 
-//    public static void inventoryMenu(){
-//        //Display the Inventory menu
-//        System.out.println("=== Inventory Display ===");
-//        System.out.println();
-//        System.out.println("Press 1 to Display ID");
-//        System.out.println("Press 2 to Display Name");
-//        System.out.println("Press 3 to Display Price");
-//        System.out.println("Press 4 to exit");
-//        System.out.println();
-//        System.out.println("Please choose an option: ");
-//
-//
-//        int usersChoice = theScanner.nextInt();
-//
-//        boolean isRunning = true;
-//        while(isRunning){
-//            case 1:
-//                displayId;
-//                break;
-//            case 2:
-//                displayName;
-//                break;
-//            case 3:
-//                displayPrice;
-//                break;
-//            case 4:
-//                System.exit(0);
-//
-//
-//        }
+    public static void inventoryMenu(){
+        //Display the Inventory menu
+        System.out.println("=== Inventory Display ===");
+        System.out.println();
+        System.out.println("Press 1 to Display ID");
+        System.out.println("Press 2 to Display Name");
+        System.out.println("Press 3 to Display Price");
+        System.out.println("Press 4 to exit");
+        System.out.println();
+        System.out.println("Please choose an option: ");
 
+
+        int usersChoice = theScanner.nextInt();
+
+        boolean isRunning = true;
+        while(isRunning){
+
+            switch(usersChoice){
+                case 1:
+                    idSearch;
+                    break;
+                case 2:
+                    nameSearch;
+                    break;
+                case 3:
+                    priceSearch;
+                    break;
+                case 4:
+                    isRunning = false;
+                default:
+                    System.out.println("Invalid choice");
+            }
+
+        }
+
+    }
 
     public static ArrayList<Product> getInventory(){
         //Creating an empty array list
@@ -71,6 +76,10 @@ static Scanner theScanner = new Scanner (System.in);
         return inventory;
     }
 
+    public static ArrayList<Product> idSearch(){
 
+        //Prompt user for the id they are trying to look up and store
+        System.out.println("What is the id for your item? ");
+    }
 }
 
