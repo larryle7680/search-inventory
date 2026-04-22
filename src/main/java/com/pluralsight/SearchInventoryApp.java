@@ -4,20 +4,27 @@ import java.util.ArrayList;
 import java.util.*;
 
 public class SearchInventoryApp {
+
 static Scanner theScanner = new Scanner (System.in);
     public static void main(String[] args) {
+        //Calling the getInventory method to put it in inventory
+        ArrayList<Product> inventory = getInventory();
 
-        //load products into array list
-        ArrayList<Product> inventory = new ArrayList<Product>();
+        //Header for inventory
+        System.out.println("This is what we have in the inventory: ");
+        System.out.println();
 
 
-        //Creating a loop to iterate through the Array List
-        for(int i = 0; i < inventory.size; i++){
-            //Printing everything in the list
-            System.out.println(i++ + " " + inventory.get(i));
-            System.out.println(getInventory());
+        //Use a for loop to iterate through the array and print
+        for(int i = 0; i < inventory.size(); i++) {
+            Product p = inventory.get(i);
+            System.out.printf("ID: %d | Name: %s | Price: %.2f\n",p.getProductID(),p.getProductName(),p.getPrice());
 
+
+        }
     }
+
+
 
 //    public static void inventoryMenu(){
 //        //Display the Inventory menu
@@ -49,7 +56,7 @@ static Scanner theScanner = new Scanner (System.in);
 //
 //
 //        }
-    }
+
 
     public static ArrayList<Product> getInventory(){
         //Creating an empty array list
@@ -66,3 +73,4 @@ static Scanner theScanner = new Scanner (System.in);
 
 
 }
+
