@@ -76,10 +76,30 @@ static Scanner theScanner = new Scanner (System.in);
         return inventory;
     }
 
-    public static ArrayList<Product> idSearch(){
+    public static void idSearch(){
+        //Setting Variables
+        boolean found = false;
+        ArrayList<Product> inventory = getInventory();
 
-        //Prompt user for the id they are trying to look up and store
-        System.out.println("What is the id for your item? ");
-    }
+
+        //Using a while loop to prompt user the questions
+            while (!found){
+                System.out.print("Please input your item ID: ");
+                int searchId = theScanner.nextInt();
+
+                //Use a for loop to iterate through the array and print
+                for(int i = 0; i < inventory.size(); i++) {
+                Product p = inventory.get(i);
+                if(searchId == p.getProductID()){
+                    System.out.println(p.getProductID() + " | " + p.getProductName() + " | " + p.getPrice());
+
+                }
+                }
+
+            }
+
+
+        }
 }
+
 
