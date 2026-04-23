@@ -1,38 +1,23 @@
 package com.pluralsight;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.*;
 
 public class SearchInventoryApp {
 
-static Scanner theScanner = new Scanner (System.in);
+    static Scanner theScanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        //Calling the getInventory method to put it in inventory
-        ArrayList<Product> inventory = getInventory();
-
-        //Header for inventory
-        System.out.println("This is what we have in the inventory: ");
-        System.out.println();
-
-
-        //Use a for loop to iterate through the array and print
-        for(int i = 0; i < inventory.size(); i++) {
-            Product p = inventory.get(i);
-            System.out.printf("ID: %d | Name: %s | Price: %.2f\n",p.getProductID(),p.getProductName(),p.getPrice());
-        }
-
         //Call the menu
         //Prompt the user
         inventoryMenu();
+        ArrayList<Product> inventory = getInventory();
     }
 
 
-
-    public static void inventoryMenu(){
+    public static void inventoryMenu() {
         //Display the Inventory menu
         System.out.println();
         System.out.println("=== Inventory Display ===");
@@ -49,11 +34,11 @@ static Scanner theScanner = new Scanner (System.in);
         int usersChoice = theScanner.nextInt();
 
         boolean isRunning = true;
-        while(isRunning){
+        while (isRunning) {
 
-            switch(usersChoice){
+            switch (usersChoice) {
                 case 1:
-                    //allItems();
+                    allItems();
                     break;
                 case 2:
                     idSearch();
@@ -77,7 +62,8 @@ static Scanner theScanner = new Scanner (System.in);
 
     }
 
-    public static ArrayList<Product> getInventory(){
+    //GET INVENTORY METHOD
+    public static ArrayList<Product> getInventory() {
         //Creating an empty array list
         ArrayList<Product> inventory = new ArrayList<Product>();
         //Add stuff to inventory
@@ -87,135 +73,168 @@ static Scanner theScanner = new Scanner (System.in);
         inventory.add(new Product(1111, "Shovel", 20.00));
         inventory.add(new Product(9999, "Plant Pots", 15.00));
 
+
+        try {
+            FileReader fileReader = new FileReader("src/main/resources/inventory.csv");
+            BufferedReader bufReader = new BufferedReader(fileReader);
+
+            //OutPUT LINE WHEN USING A READER
+            String line;
+
+            while ((line = bufReader.readLine()) != null) {
+                String[] lineSplit = line.split("\\|");
+                int idSplit = Integer.parseInt(lineSplit[0]);
+                String nameSplit = lineSplit[1];
+                double priceSplit = Double.parseDouble(lineSplit[2]);
+
+                inventory.add(new Product(idSplit, nameSplit, priceSplit));
+            }
+
+
+        } catch (Exception e) {
+            System.out.println("Could not find the files");
+            throw new RuntimeException(e);
+        }
         return inventory;
     }
 
-    //ID SEARCH METHOD
-    public static void idSearch(){
-        //Setting Variables
-        boolean found = false;
+    public static void allItems() {
+        //Calling the getInventory method to put it in inventory
         ArrayList<Product> inventory = getInventory();
 
+        //Header for inventory
+        System.out.println("This is what we have in the inventory: ");
+        System.out.println();
 
-        //Using a while loop to prompt user the questions
-            while (!found){
+
+        //Use a for loop to iterate through the array and print
+        for (int i = 0; i < inventory.size(); i++) {
+            Product p = inventory.get(i);
+            System.out.printf("ID: %d | Name: %s | Price: %.2f\n", p.getProductID(), p.getProductName(), p.getPrice());
+        }
+
+    }
+        //ID SEARCH METHOD
+        public static void idSearch () {
+            //Setting Variables
+            boolean found = false;
+            ArrayList<Product>inventory = getInventory();
+
+
+            //Using a while loop to prompt user the questions
+            while (!found) {
                 System.out.print("Please input your item ID: ");
                 int searchId = theScanner.nextInt();
 
                 //Use a for loop to iterate through the array and print
-                for(int i = 0; i < inventory.size(); i++) {
-                Product p = inventory.get(i);
-                if(searchId == p.getProductID()){
-                    System.out.println();
-                    System.out.println("Your ID matches this item:");
-                    System.out.println(p.getProductID() + " | " + p.getProductName() + " | " + p.getPrice());
+                for (int i = 0; i < inventory.size(); i++) {
+                    Product p = inventory.get(i);
+                    if (searchId == p.getProductID()) {
+                        System.out.println();
+                        System.out.println("Your ID matches this item:");
+                        System.out.println(p.getProductID() + " | " + p.getProductName() + " | " + p.getPrice());
 
+                    }
                 }
+            }
+
+        }
+        //NAME SEARCH METHOD
+        public static void nameSearch () {
+            //Setting Variables
+            boolean found = false;
+            ArrayList<Product> inventory = getInventory();
+
+
+            //Using a while loop to prompt user the questions
+            while (!found) {
+                theScanner.nextLine();
+                System.out.print("Please input your item Name: ");
+                String searchId = theScanner.nextLine();
+
+                //Use a for loop to iterate through the array and print
+                for (int i = 0; i < inventory.size(); i++) {
+                    Product p = inventory.get(i);
+                    if (searchId.equalsIgnoreCase(p.getProductName())) {
+                        System.out.println();
+                        System.out.println("Your name input matches this item:");
+                        System.out.println(p.getProductID() + " | " + p.getProductName() + " | " + p.getPrice());
+
+                    }
                 }
+            }
+
+        }
+        //PRICE SEARCH METHOD
+        public static void priceSearch () {
+            //Setting Variables
+            boolean found = false;
+            ArrayList<Product> inventory = getInventory();
+
+
+            //Using a while loop to prompt user the questions
+            while (!found) {
+                System.out.print("Please input your item price minimum: ");
+                double searchPriceMin = theScanner.nextDouble();
+                System.out.println();
+                System.out.println("Please input your item price maximum: ");
+                double searchPriceMax = theScanner.nextDouble();
+
+
+                //Use a for loop to iterate through the array and print
+                for (int i = 0; i < inventory.size(); i++) {
+                    Product p = inventory.get(i);
+                    if (p.getPrice() >= searchPriceMin && p.getPrice() <= searchPriceMax) {
+                        System.out.println();
+                        System.out.println("These are the items that are within the range: ");
+                        System.out.println(p.getProductID() + " | " + p.getProductName() + " | " + p.getPrice());
+
+
+                    }
                 }
+            }
 
-    }
-    //NAME SEARCH METHOD
-    public static void nameSearch(){
-        //Setting Variables
-        boolean found = false;
-        ArrayList<Product> inventory = getInventory();
+        }
+        //ADD ITEMS METHOD
+        public static void addInventory ( boolean isRunning){
+            ArrayList<Product> inventory = getInventory();
+            //Inventory menu prompt user to fill out the questions and store to add new items.
+            System.out.println("=== Adding Inventory ===");
+            System.out.println();
+            System.out.println("What is the item ID?");
+            int addItemId = theScanner.nextInt();
 
-
-        //Using a while loop to prompt user the questions
-        while (!found){
+            //Eat line
             theScanner.nextLine();
-            System.out.print("Please input your item Name: ");
-            String searchId = theScanner.nextLine();
 
-            //Use a for loop to iterate through the array and print
-            for(int i = 0; i < inventory.size(); i++) {
-                Product p = inventory.get(i);
-                if(searchId.equalsIgnoreCase(p.getProductName()) ){
-                    System.out.println();
-                    System.out.println("Your name input matches this item:");
-                    System.out.println(p.getProductID() + " | " + p.getProductName() + " | " + p.getPrice());
+            System.out.println("What is the name of the item?");
+            String addItemName = theScanner.nextLine();
+            System.out.println("What is the price of the item?");
+            double addItemPrice = theScanner.nextDouble();
 
-                }
+            try {
+                FileWriter fileWriter = new FileWriter("src/main/inventory.csv", true);
+                BufferedWriter bufWriter = new BufferedWriter(fileWriter);
+
+                Product addInventoryItems = new Product(addItemId, addItemName, addItemPrice);
+
+                bufWriter.write(addInventoryItems.getProductID() + "|" + addInventoryItems.getProductName() + "|" + addInventoryItems.getPrice());
+
+                bufWriter.close();
+                System.out.println();
+                System.out.println("You added: " + "ID: " + addInventoryItems.getProductID() + " Name: " + addInventoryItems.getProductName() + " Price: " + addInventoryItems.getPrice());
+                System.out.println();
+                //Close the menu
+                isRunning = false;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        }
-
-    }
-    //PRICE SEARCH METHOD
-    public static void priceSearch(){
-        //Setting Variables
-        boolean found = false;
-        ArrayList<Product> inventory = getInventory();
 
 
-        //Using a while loop to prompt user the questions
-        while (!found){
-            System.out.print("Please input your item price minimum: ");
-            double searchPriceMin = theScanner.nextDouble();
-            System.out.println();
-            System.out.println("Please input your item price maximum: ");
-            double searchPriceMax = theScanner.nextDouble();
-
-
-            //Use a for loop to iterate through the array and print
-            for(int i = 0; i < inventory.size(); i++) {
-                Product p = inventory.get(i);
-                if(p.getPrice() >= searchPriceMin && p.getPrice() <= searchPriceMax ){
-                    System.out.println();
-                    System.out.println("These are the items that are within the range: ");
-                    System.out.println(p.getProductID() + " | " + p.getProductName() + " | " + p.getPrice());
-
-
-
-                }
-            }
-        }
-
-    }
-    //ADD ITEMS METHOD
-    public static void addInventory( boolean isRunning){
-        ArrayList<Product> inventory = getInventory();
-        //Inventory menu prompt user to fill out the questions and store to add new items.
-        System.out.println("=== Adding Inventory ===");
-        System.out.println();
-        System.out.println("What is the item ID?");
-        int addItemId = theScanner.nextInt();
-
-        //Eat line
-        theScanner.nextLine();
-
-        System.out.println("What is the name of the item?");
-        String addItemName = theScanner.nextLine();
-        System.out.println("What is the price of the item?");
-        double addItemPrice = theScanner.nextDouble();
-
-        try {
-            FileWriter fileWriter = new FileWriter("src/main/inventory.csv");
-            BufferedWriter bufWriter = new BufferedWriter(fileWriter);
-
-            Product addInventoryItems = new Product(addItemId,addItemName,addItemPrice);
-
-            bufWriter.write(addInventoryItems.getProductID() + "|" + addInventoryItems.getProductName() + "|" + addInventoryItems.getPrice() + true);
-
-            bufWriter.close();
-            System.out.println();
-            System.out.println("You added: " + "ID: " + addInventoryItems.getProductID() + " Name: " + addInventoryItems.getProductName() + " Price: " + addInventoryItems.getPrice());
-            System.out.println();
-            //Close the menu
-            isRunning = false;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
 
 
-
-
-
     }
-
-
-
-}
 
 
 
